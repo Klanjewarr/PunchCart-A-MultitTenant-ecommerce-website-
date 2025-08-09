@@ -2,11 +2,14 @@
   "name": "punchcart",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "payload:types": "payload generate:types",
+    "generate:types": "payload generate:types"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -57,6 +60,7 @@
     "react-hook-form": "^7.62.0",
     "react-resizable-panels": "^3.0.4",
     "recharts": "2.15.4",
+    "sharp": "^0.34.3",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",
