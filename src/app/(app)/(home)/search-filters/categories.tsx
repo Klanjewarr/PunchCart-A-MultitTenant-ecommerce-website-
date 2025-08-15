@@ -59,7 +59,7 @@ export const Categories = ({ data }: CategoriesProps) => {
     return (
 
         <div className="relative w-full" >
-            <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} data={data}  />
+            <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen}   />
 
             <div
                 ref={measureRef}
