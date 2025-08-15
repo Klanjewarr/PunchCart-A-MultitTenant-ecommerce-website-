@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomCategory } from "../types";
 import { ChevronRightIcon, ChevronsLeftIcon } from "lucide-react";
 import { SheetContent, SheetHeader, SheetTitle, Sheet } from "@/components/ui/sheet";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";

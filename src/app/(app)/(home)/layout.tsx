@@ -22,7 +22,7 @@ const Layout = async ({ children }: Props) => {
 
 // prefetch categories data
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(
+  await queryClient.prefetchQuery(
     trpc.categories.getMany.queryOptions()
   );
  
