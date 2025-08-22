@@ -14,8 +14,8 @@ import { registerSchema } from "../../schemas";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
-import {toast} from "sonner"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner"
 import { useRouter } from "next/navigation";
 import { ro } from "date-fns/locale";
 
@@ -27,16 +27,18 @@ const poppins = Poppins({
 
 export const SignUpView = () => {
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const trpc = useTRPC();
     const register = useMutation(trpc.auth.register.mutationOptions({
         onError: (error) => {
             toast.error(error.message);
         },
-        onSuccess: () => {
+        onSuccess: async () => {
+            await queryClient.invalidateQueries(trpc.auth.session.queryOptions())
             router.push("/");
         }
-}));
+    }));
 
     const form = useForm<z.infer<typeof registerSchema>>({
         mode: 'all',
@@ -103,8 +105,8 @@ export const SignUpView = () => {
                                     <FormMessage />
                                 </FormItem>
                             )} />
-                    
-                     <FormField
+
+                        <FormField
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
@@ -116,27 +118,27 @@ export const SignUpView = () => {
                                 </FormItem>
                             )} />
 
-                    <FormField
+                        <FormField
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-base">Password</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type="password"/>
+                                        <Input {...field} type="password" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
 
-                    <Button
-                    disabled={register.isPending}
-                    type="submit"
-                    size="lg"
-                    variant="elevated"
-                    className="bg-black text-white hover:bg-pink-400 hover:text-primary"
-                    >
-                        Create account
-                    </Button>
+                        <Button
+                            disabled={register.isPending}
+                            type="submit"
+                            size="lg"
+                            variant="elevated"
+                            className="bg-black text-white hover:bg-pink-400 hover:text-primary"
+                        >
+                            Create account
+                        </Button>
 
 
                     </form>
