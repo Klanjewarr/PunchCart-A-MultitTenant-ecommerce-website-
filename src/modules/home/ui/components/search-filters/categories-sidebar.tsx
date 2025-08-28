@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { CustomCategory } from "../types";
+
 import { ChevronRightIcon, ChevronsLeftIcon } from "lucide-react";
 import { SheetContent, SheetHeader, SheetTitle, Sheet } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
+import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
 
 
@@ -23,8 +24,8 @@ export const CategoriesSidebar = ({ open, onOpenChange,  }: Props) => {
     
     const router = useRouter();
 
-    const [parentCategory, setParentCategory] = useState<CustomCategory[] | null>(null);
-    const [selecteCategory, setSelectedCategory] = useState<CustomCategory | null>(null);
+    const [parentCategory, setParentCategory] = useState< CategoriesGetManyOutput | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<CategoriesGetManyOutput | null>(null);
 
     const currentCategories = parentCategory ?? data ?? [];
 
@@ -34,15 +35,15 @@ export const CategoriesSidebar = ({ open, onOpenChange,  }: Props) => {
         onOpenChange(open);
     }
 
-    const handleCategoryClick = (category: CustomCategory) => {
+    const handleCategoryClick = (category: CategoriesGetManyOutput[1]) => {
         if (category.subcategories && category.subcategories.length > 0) {
-            setParentCategory(category.subcategories as CustomCategory[]);
+            setParentCategory(category.subcategories as CategoriesGetManyOutput);
             setSelectedCategory(category);
         } else {
             //This is a leaf category (no subcategories) 
-            if (parentCategory && selecteCategory) {
+            if (parentCategory && selectedCategory) {
                 //This is a subcategory -navigate to /category/subcategory
-                router.push(`/${selecteCategory.slug}/${category.slug}`);
+                router.push(`/${selectedCategory.slug}/${category.slug}`);
             }
             else {
                 //This is a main category - navigate to /category
@@ -60,7 +61,7 @@ export const CategoriesSidebar = ({ open, onOpenChange,  }: Props) => {
         setSelectedCategory(null);
         }}
           
-  const backgroundColor = selecteCategory?.color||"white";
+  const backgroundColor = selectedCategory?.color ||"white";
 
 
 return (
