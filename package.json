@@ -8,16 +8,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "payload:types": "payload generate:types",
     "generate:types": "payload generate:types",
     "db:fresh": "payload migrate:fresh",
-    "db:seed": "bun run src/seed.ts"
+    "db:seed": "bun run src/seed.ts",
+    "db:reset":"bun run db:fresh && bun run db:seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "@payloadcms/db-mongodb": "^3.50.0",
     "@payloadcms/next": "^3.50.0",
     "@payloadcms/payload-cloud": "^3.50.0",
+    "@payloadcms/plugin-multi-tenant": "3.50.0",
     "@payloadcms/richtext-lexical": "^3.50.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
