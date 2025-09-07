@@ -9,6 +9,26 @@ import { DEFAULT_LIMIT } from "@/constants";
 
 export const productsRouter = createTRPCRouter({
   // Define your procedures here
+  getOne: baseProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async({ctx, input})=>{
+      const product = await ctx.db.findByID({
+        collection: "products",
+        id: input.id,
+        depth:2,
+      })
+
+      return {
+        ...product,
+        image: product.image as Media | null,
+        cover: product.cover as Media | null,
+        tenant: product.tenant as Tenant & { image:Media| null},
+      };
+    }),
   getMany: baseProcedure
     .input(
       z.object({
@@ -23,40 +43,40 @@ export const productsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const where: Where = { };
+      const where: Where = {};
       // something faulty  i will comeback here
-      let sort : Sort = "-createdAt";
+      let sort: Sort = "-createdAt";
 
-      if(input.sort==="curated"){
-        sort="-createdAt"
+      if (input.sort === "curated") {
+        sort = "-createdAt"
       }
-      if(input.sort==="hot_and_new"){
-        sort="+createdAt"
+      if (input.sort === "hot_and_new") {
+        sort = "+createdAt"
       }
 
-      if(input.sort==="trending"){
-        sort="-createdAt"
+      if (input.sort === "trending") {
+        sort = "-createdAt"
       }
-      
 
-      if (input.minPrice && input.maxPrice){
+
+      if (input.minPrice && input.maxPrice) {
         where.price = {
           greater_than_equal: input.minPrice,
           less_than_equal: input.maxPrice,
         }
-      }else if (input.minPrice){
+      } else if (input.minPrice) {
         where.price = {
           greater_than_equal: input.minPrice,
         }
-      }else if (input.maxPrice) {
+      } else if (input.maxPrice) {
         where.price = {
-            ...where.price,
+          ...where.price,
           less_than_equal: input.maxPrice
         }
       }
 
-      if (input.tenantSlug){
-        where["tenant.slug"]={
+      if (input.tenantSlug) {
+        where["tenant.slug"] = {
           equals: input.tenantSlug,
         }
       }
@@ -65,7 +85,7 @@ export const productsRouter = createTRPCRouter({
         const categoriesData = await ctx.db.find({
           collection: "categories",
           limit: 1,
-          depth:1,
+          depth: 1,
           pagination: false,
           where: {
             slug: {
@@ -83,22 +103,22 @@ export const productsRouter = createTRPCRouter({
           }))
         }));
 
-        const subcategoriesSlugs=[]
+        const subcategoriesSlugs = []
         const parentCategory = formattedData[0];
 
         if (parentCategory) {
           subcategoriesSlugs.push(
-            ...parentCategory.subcategories.map((subcategory)=>subcategory.slug)
+            ...parentCategory.subcategories.map((subcategory) => subcategory.slug)
           )
-        
+
           where["category.slug"] = {
             in: [parentCategory.slug, ...subcategoriesSlugs]
           }
         }
-     }
+      }
 
-      if (input.tags && input.tags.length>0){
-        where["tags.name"]={
+      if (input.tags && input.tags.length > 0) {
+        where["tags.name"] = {
           in: input.tags,
         }
       }
@@ -114,10 +134,10 @@ export const productsRouter = createTRPCRouter({
 
       return {
         ...data,
-        docs:data.docs.map((doc)=>({
+        docs: data.docs.map((doc) => ({
           ...doc,
-          image:doc.image as Media | null,
-          tenant:doc.tenant as Tenant & {image: Media|null},
+          image: doc.image as Media | null,
+          tenant: doc.tenant as Tenant & { image: Media | null },
         }))
       };
     })
