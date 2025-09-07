@@ -233,7 +233,8 @@ export interface Product {
   category?: (string | null) | Category;
   tags?: (string | Tag)[] | null;
   image?: (string | null) | Media;
-  refunPolicy?: ('30-day' | '14-day' | '7-day' | '3-day' | '1-Day' | 'no-refunds') | null;
+  cover?: (string | null) | Media;
+  refundPolicy?: ('30-day' | '14-day' | '7-day' | '3-day' | '1-Day' | 'no-refunds') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -394,7 +395,8 @@ export interface ProductsSelect<T extends boolean = true> {
   category?: T;
   tags?: T;
   image?: T;
-  refunPolicy?: T;
+  cover?: T;
+  refundPolicy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
