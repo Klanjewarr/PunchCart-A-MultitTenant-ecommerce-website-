@@ -46,6 +46,7 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
 
     useEffect(()=>{
         if(states.success){
+            console.log("triggered")
             setStates({ success: false, cancel: false})
             clearCart();
             // TODO: Invalidate Libary
