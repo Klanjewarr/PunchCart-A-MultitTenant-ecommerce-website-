@@ -42,7 +42,7 @@ export const SearchInput = ({disabled}: Props) => {
                 asChild
                 variant="elevated"
                 >
-                <Link href="/libary">
+                <Link prefetch href="/library">
                 <BookmarkCheckIcon />
                 Libary
                 </Link>
