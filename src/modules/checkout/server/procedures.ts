@@ -20,6 +20,7 @@ export const checkoutRouter = createTRPCRouter({
     .mutation(async({ctx, input})=>{
       const products = await ctx.db.find({
         collection:"products",
+        depth:2,
         where: {
           and:[
             {id:{
