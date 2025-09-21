@@ -1,7 +1,7 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { lexicalEditor} from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -29,8 +29,8 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    components:{
-      beforeNavLinks:["@/components/stripe-verify#StripeVerify"]
+    components: {
+      beforeNavLinks: ["@/components/stripe-verify#StripeVerify"]
     },
   },
   collections: [Users, Media, Category, Products, Tags, Tenants, Orders, Reviews],
@@ -46,13 +46,13 @@ export default buildConfig({
   plugins: [
     payloadCloudPlugin(),
     multiTenantPlugin<Config>({
-      collections:{
-        products:{},
+      collections: {
+        products: {},
       },
-      tenantsArrayField:{
+      tenantsArrayField: {
         includeDefaultField: false,
       },
-      userHasAccessToAllTenants:(user)=> isSuperAdmin(user),
+      userHasAccessToAllTenants: (user) => isSuperAdmin(user),
     }),
     // storage-adapter-placeholder
   ],
