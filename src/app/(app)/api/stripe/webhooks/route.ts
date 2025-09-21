@@ -7,96 +7,117 @@ import { stripe } from "@/lib/stripe";
 import { ExpandedLineItem } from "@/modules/checkout/types";
 import { de } from "date-fns/locale";
 
-export async function POST (req:Request){
+export async function POST(req: Request) {
     let event: Stripe.Event;
 
-    try{
+    try {
         event = stripe.webhooks.constructEvent(
             await (await req.blob()).text(),
             req.headers.get("stripe-signature") as string,
             process.env.STRIPE_WEBHOOK_SECRET as string,
         )
-    }catch(error){
+    } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
-        if(error! instanceof Error){
+        if (error! instanceof Error) {
             console.log(error);
         }
 
-        console.log(`❌ Error message: ${errorMessage}`);   
+        console.log(`❌ Error message: ${errorMessage}`);
         return NextResponse.json(
-            {message:`Webhook Error: ${errorMessage}` },
-            {status: 400}
+            { message: `Webhook Error: ${errorMessage}` },
+            { status: 400 }
         )
     }
 
     console.log("✅ Success:", event.id);
 
-    const permittedEvents: string[] =[
+    const permittedEvents: string[] = [
         "checkout.session.completed",
+        "account.updated"
     ];
 
-    const payload = await getPayload({ config});
-    if(permittedEvents.includes(event.type)){
+    const payload = await getPayload({ config });
+    if (permittedEvents.includes(event.type)) {
         let data;
 
-        try{
-            switch(event.type){
+        try {
+            switch (event.type) {
                 case "checkout.session.completed":
-                data = event.data.object as Stripe.Checkout.Session;
+                    data = event.data.object as Stripe.Checkout.Session;
 
-                if(!data?.metadata?.userId){
-                    throw new Error("User ID is required");
-                }
+                    if (!data?.metadata?.userId) {
+                        throw new Error("User ID is required");
+                    }
 
-                const user = await payload.findByID({
-                    collection: "users",
-                    id: data.metadata.userId,
-                })
+                    const user = await payload.findByID({
+                        collection: "users",
+                        id: data.metadata.userId,
+                    })
 
-                if(!user){
-                    throw new Error("User not found");
-                }
+                    if (!user) {
+                        throw new Error("User not found");
+                    }
 
-                const expandedSession = await stripe.checkout.sessions.retrieve(
-                    data.id,
-                    {
-                        expand: ["line_items.data.price.product"],
-                    },
-                );
+                    const expandedSession = await stripe.checkout.sessions.retrieve(
+                        data.id,
+                        {
+                            expand: ["line_items.data.price.product"],
+                        },
+                        {
+                            stripeAccount: event.account,
+                        },
+                    );
 
-                if(
-                    !expandedSession.line_items?.data ||
-                    !expandedSession.line_items?.data.length 
-                ){
-                    throw new Error("No line items found");
-                }
+                    if (
+                        !expandedSession.line_items?.data ||
+                        !expandedSession.line_items?.data.length
+                    ) {
+                        throw new Error("No line items found");
+                    }
 
-                const lineItems = expandedSession.line_items.data as ExpandedLineItem[];
+                    const lineItems = expandedSession.line_items.data as ExpandedLineItem[];
 
-                for (const item of lineItems){
-                    await payload.create({
-                        collection: "orders",
+                    for (const item of lineItems) {
+                        await payload.create({
+                            collection: "orders",
+                            data: {
+                                stripeCheckoutSessionId: data.id,
+                                stripeAccountId: event.account,
+                                user: user.id,
+                                product: item.price.product.metadata.id,
+                                name: item.price.product.name,
+                            },
+                        });
+                    }
+                    break;
+                case "account.updated":
+                    data = event.data.object as Stripe.Account;
+
+                    await payload.update({
+                        collection: "tenants",
+                        where: {
+                            stripeAccountId: {
+                                equals: data.id,
+                            },
+                        },
                         data: {
-                            stripeCheckoutSessionId: data.id,
-                            user: user.id,
-                            product: item.price.product.metadata.id,
-                            name: item.price.product.name,
+                            stripeDetailsSubmitted: data.details_submitted,
                         },
                     });
-                }
-                break;
-            default:
-                throw new Error(`Unhandled event: ${event.type}`);
+
+                    break;
+                default:
+                    throw new Error(`Unhandled event: ${event.type}`);
             }
-        }catch(error){
+        } catch (error) {
             console.log(error)
             return NextResponse.json(
-                {message: "Webhook handler failed"},
-                {status: 500}
+                { message: "Webhook handler failed" },
+                { status: 500 }
             );
         }
     }
 
-    return NextResponse.json({message: "Received"},{status:200});
+    return NextResponse.json({ message: "Received" }, { status: 200 });
 };
