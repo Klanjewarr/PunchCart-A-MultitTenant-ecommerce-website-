@@ -1,9 +1,6 @@
 import { DEFAULT_LIMIT } from "@/constants";
-import { Category } from "@/payload-types";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
-import type { Where } from "payload";
 import z from "zod";
-
 
 export const tagsRouter = createTRPCRouter({
   // Define your procedures here
@@ -20,8 +17,6 @@ export const tagsRouter = createTRPCRouter({
         page: input.cursor,
         limit:input.limit,
       });
-
-
 
       return data;
     })
