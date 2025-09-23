@@ -145,7 +145,7 @@ const seed = async () => {
     const adminAccount = await stripe.accounts.create({});
 
     // create admin tenant
-    const adminTenant =await payload.create({
+    const adminTenant = await payload.create({
       collection:"tenants",
       data:{
         name:"admin",

@@ -17,13 +17,11 @@ import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner"
 import { useRouter } from "next/navigation";
-import { ro } from "date-fns/locale";
 
 const poppins = Poppins({
     subsets: ["latin"],
     weight: ["700"],
 });
-
 
 export const SignUpView = () => {
     const router = useRouter();

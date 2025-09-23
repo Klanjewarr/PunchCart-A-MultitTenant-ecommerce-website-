@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
 import { ExpandedLineItem } from "@/modules/checkout/types";
-import { de } from "date-fns/locale";
 
 export async function POST(req: Request) {
     let event: Stripe.Event;
