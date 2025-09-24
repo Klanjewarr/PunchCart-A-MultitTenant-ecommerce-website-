@@ -46,9 +46,10 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
-    multiTenantPlugin<Config>({
+    multiTenantPlugin({
       collections: {
         products: {},
+        media:{},
       },
       tenantsArrayField: {
         includeDefaultField: false,
