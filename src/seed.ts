@@ -162,6 +162,11 @@ const seed = async () => {
         password:"demo",
         roles:["super-admin"],
         username:"admin",
+        tenants:[
+          {
+            tenant: adminTenant.id,
+          }
+        ]
       }
     })
 

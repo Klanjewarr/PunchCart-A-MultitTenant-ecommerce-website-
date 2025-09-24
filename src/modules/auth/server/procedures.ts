@@ -1,17 +1,11 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
-
 import { headers as getHeaders } from "next/headers";
 import { TRPCError } from "@trpc/server";
-
 
 import { loginSchema, registerSchema } from "../schemas";
 import { generateAuthCookie } from "../utils";
 import { stripe } from "@/lib/stripe";
-
-
-
-
 
 export const authRouter = createTRPCRouter({
   // Define your procedures here
