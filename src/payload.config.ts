@@ -16,7 +16,6 @@ import { Category } from './collections/Categories'
 import { Products } from "./collections/Products"
 import { Tags } from './collections/Tags'
 import { Tenants } from './collections/Tenants'
-import { Config } from './payload-types'
 import { Orders } from './collections/Ordes'
 import { Reviews } from './collections/Reviews'
 import { isSuperAdmin } from './lib/access'
