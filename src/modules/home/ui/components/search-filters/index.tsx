@@ -7,10 +7,10 @@ import { SearchInput } from "./search-input";
 import { useParams } from "next/navigation";
 import { DEFAULT_BG_COLOR } from "../../../constant";
 import { BreadcrumbNavigation } from "./breadcrumb-navigation";
-
-
+import { useProductFilters } from "@/modules/products/hooks/use-product-filters";
 
 export const SearchFilters = () => {
+const [filters, setFilters]= useProductFilters();
 
 const trpc = useTRPC();
 const {data}=useSuspenseQuery(trpc.categories.getMany.queryOptions());
@@ -35,7 +35,12 @@ const activeCategory = categoryParam || "all"
     return (
 
         <div className="px-4 lg:px-12 py-8 border-b flex flex-col gap-4 w-full justify-center" style={{backgroundColor: activeCategoryColor}}>
-            <SearchInput />
+            <SearchInput
+            defaultValue={filters.search}
+            onChange={(value)=> setFilters({
+                search: value
+            })}
+             />
             <div className="hidden lg:block ">
             <Categories data ={data} />
             </div>

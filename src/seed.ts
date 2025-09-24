@@ -2,7 +2,6 @@ import {getPayload} from "payload";
 import  config  from "@payload-config";
 import { stripe } from "./lib/stripe";
 
-
 const categories = [
   {
     name: "All",
