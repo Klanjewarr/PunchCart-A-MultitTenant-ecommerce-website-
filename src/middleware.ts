@@ -25,6 +25,13 @@ export default async function middleware(req: NextRequest) {
     }
 
     if (hostname.endsWith(`.${rootDomain}`)) {
+        // Do NOT tenant-rewrite auth pages; redirect subdomain auth to root domain
+        const authPaths = ["/sign-in", "/sign-up"] as const;
+        if (authPaths.some((p) => url.pathname.startsWith(p))) {
+            const redirectUrl = new URL(`https://${rootDomain}${url.pathname}`);
+            redirectUrl.search = url.search; // preserve query params
+            return NextResponse.redirect(redirectUrl);
+        }
         const tenantSlug = hostname.replace(`.${rootDomain}`, "");
         return NextResponse.rewrite(new URL(`/tenants/${tenantSlug}${url.pathname}`, req.url))
     }
