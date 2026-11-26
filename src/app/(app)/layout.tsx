@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   title: "PunchCart | The Multi-Tenant Digital Creator Marketplace",
   description: "Launch your independent digital goods storefront in minutes. Sell software, templates, design kits, and courses with instant Stripe payouts and custom creator URLs.",
   keywords: ["creator marketplace", "digital downloads", "stripe connect", "templates", "multi-tenant", "ecommerce"],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
