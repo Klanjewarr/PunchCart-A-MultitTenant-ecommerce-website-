@@ -3,7 +3,7 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 import sharp from "sharp";
-import { stripe } from "./lib/stripe";
+import { Product, User } from "@/payload-types";
 
 function escapeXml(unsafe: string): string {
   return unsafe.replace(/[<>&'"]/g, (c) => {
@@ -678,7 +678,7 @@ const seed = async () => {
     { username: "alex", email: "alex@demo.com" },
     { username: "sarah", email: "sarah@demo.com" },
   ];
-  const buyerDocs: any[] = [];
+  const buyerDocs: User[] = [];
 
   for (const b of buyers) {
     let buyer = (
@@ -703,10 +703,9 @@ const seed = async () => {
   }
 
   // 6. Products with Custom Graphic Media
-  const createdProducts: any[] = [];
+  const createdProducts: Product[] = [];
 
-  for (let i = 0; i < productsCatalog.length; i++) {
-    const p = productsCatalog[i];
+  for (const [i, p] of productsCatalog.entries()) {
     const tenantId = tenantMap.get(p.creatorSlug);
     const categoryId = categoryMap.get(p.categorySlug) || categoryMap.get(p.parentCategorySlug);
 
@@ -845,6 +844,7 @@ const seed = async () => {
     ];
 
     for (const ord of sampleOrders) {
+      if (!ord.user || !ord.prod) continue;
       await payload.create({
         collection: "orders",
         data: {

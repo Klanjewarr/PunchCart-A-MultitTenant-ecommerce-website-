@@ -1,12 +1,6 @@
 import Link from "next/link";
 import { Github, Twitter, MessageSquare, ArrowRight, Heart } from "lucide-react";
-import { Poppins } from "next/font/google";
-import { cn } from "@/lib/utils";
-
-const poppins = Poppins({
-    subsets: ["latin"],
-    weight: ["700", "800"],
-});
+import { Logo } from "@/components/logo";
 
 export const Footer = () => {
     return (
@@ -16,11 +10,7 @@ export const Footer = () => {
                 
                 {/* Brand Column */}
                 <div className="lg:col-span-2 flex flex-col gap-5">
-                    <Link href="/" className="inline-block">
-                        <span className={cn("text-3xl font-extrabold tracking-tight uppercase", poppins.className)}>
-                            PunchCart
-                        </span>
-                    </Link>
+                    <Logo size="md" />
                     <p className="text-muted-foreground text-sm max-w-sm font-normal leading-relaxed">
                         The ultimate multi-tenant platform for digital creators. Sell your PDFs, software, templates, design kits, and courses directly to customers with custom subdomains and instant Stripe transfers.
                     </p>

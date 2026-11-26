@@ -1,7 +1,5 @@
 "use client";
 
-import { Poppins } from "next/font/google"
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,16 +10,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 
 import { registerSchema } from "../../schemas";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
-const poppins = Poppins({
-    subsets: ["latin"],
-    weight: ["700"],
-});
+import { Logo } from "@/components/logo";
 
 export const SignUpView = () => {
     const router = useRouter();
@@ -64,11 +57,7 @@ export const SignUpView = () => {
         <div className="grid grid-cols-1 lg:grid-cols-5 min-h-screen">
             <div className="bg-[#F4F4F0] min-h-screen w-full lg:col-span-3 overflow-y-auto flex flex-col justify-between py-8 px-4 sm:px-8 lg:px-16">
                 <div className="w-full max-w-xl mx-auto flex items-center justify-between mb-8">
-                    <Link href="/">
-                        <span className={cn("text-3xl font-black tracking-tight uppercase border-2 border-black bg-pink-400 px-4 py-1.5 shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-all", poppins.className)}>
-                            PunchCart
-                        </span>
-                    </Link>
+                    <Logo size="md" />
 
                     <Button
                         asChild

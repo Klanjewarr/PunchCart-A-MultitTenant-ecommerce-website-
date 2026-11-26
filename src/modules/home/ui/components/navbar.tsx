@@ -3,21 +3,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
-import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { useState } from "react";
 
+import { Logo } from "@/components/logo";
 import { NavbarSidebar } from "./navbar-sidebar";
 import { MenuIcon } from "lucide-react";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
-
-
-
-const poppins = Poppins({
-    subsets: ["latin"],
-    weight: ["700"],
-});
 
 interface NavbarItemProps {
     href: string;
@@ -62,11 +55,9 @@ export const Navbar = () => {
 
     return (
         <nav className="h-20 flex border-b justify-between font-medium bg-white">
-            <Link href={"/"} className="pl-6 flex items-center" >
-                <span className={cn("text-5xl font-semibold", poppins.className)}>
-                    PunchCart
-                </span>
-            </Link>
+            <div className="pl-6 flex items-center">
+                <Logo size="lg" />
+            </div>
             <NavbarSidebar
                 items={navbarItems}
                 open={isSidebarOpen}
