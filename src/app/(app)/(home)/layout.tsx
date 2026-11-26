@@ -14,6 +14,8 @@ import { Suspense } from "react";
 
 
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   children: React.ReactNode;
 };
@@ -22,9 +24,13 @@ const Layout = async ({ children }: Props) => {
 
 // prefetch categories data
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(
-    trpc.categories.getMany.queryOptions()
-  );
+  try {
+    await queryClient.prefetchQuery(
+      trpc.categories.getMany.queryOptions()
+    );
+  } catch (error) {
+    console.error("Failed to prefetch categories:", error);
+  }
  
   
 

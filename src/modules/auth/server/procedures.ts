@@ -41,6 +41,23 @@ export const authRouter = createTRPCRouter({
         })
       }
 
+      const existingEmailData = await ctx.db.find({
+        collection: "users",
+        limit: 1,
+        where: {
+          email: {
+            equals: input.email,
+          }
+        }
+      });
+
+      if (existingEmailData.docs[0]) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Email already taken"
+        })
+      }
+
       const account = await stripe.accounts.create({});
 
       if(!account){

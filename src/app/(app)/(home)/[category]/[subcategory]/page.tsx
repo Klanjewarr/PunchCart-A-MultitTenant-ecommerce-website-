@@ -18,11 +18,16 @@ const Page = async ({params, searchParams}: Props) => {
     const filters = await loadProductFilters(searchParams);
 
     const queryClient = getQueryClient();
-    void queryClient.prefetchInfiniteQuery(trpc.products.getMany.infiniteQueryOptions({
-      ...filters,
-      category:subcategory,
-      limit:DEFAULT_LIMIT
-    })) 
+    try {
+      await queryClient.prefetchInfiniteQuery(trpc.products.getMany.infiniteQueryOptions({
+        ...filters,
+        category:subcategory,
+        tenantSlug: undefined,
+        limit:DEFAULT_LIMIT
+      }))
+    } catch (error) {
+      console.error("Failed to prefetch subcategory products:", error);
+    } 
 
     return ( 
       <HydrationBoundary state={dehydrate(queryClient)}>

@@ -4,18 +4,24 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { Categories } from "./categories";
 import { SearchInput } from "./search-input";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { DEFAULT_BG_COLOR } from "../../../constant";
 import { BreadcrumbNavigation } from "./breadcrumb-navigation";
 import { useProductFilters } from "@/modules/products/hooks/use-product-filters";
 
 export const SearchFilters = () => {
+const pathname = usePathname();
 const [filters, setFilters]= useProductFilters();
 
 const trpc = useTRPC();
 const {data}=useSuspenseQuery(trpc.categories.getMany.queryOptions());
 
 const params = useParams();
+const isInformationalPage = ["/about", "/features", "/pricing", "/contact", "/sign-in", "/sign-up"].some(path => pathname === path || pathname.startsWith(path + "/"));
+
+if (isInformationalPage) {
+    return null;
+}
 const categoryParam = params.category as string | undefined;
 const activeCategory = categoryParam || "all"
 
@@ -55,13 +61,19 @@ const activeCategory = categoryParam || "all"
 }
 
 export const SearchFiltersSkeleton = () => {
-     return (
+    const pathname = usePathname();
+    const isInformationalPage = ["/about", "/features", "/pricing", "/contact", "/sign-in", "/sign-up"].some(path => pathname === path || pathname.startsWith(path + "/"));
 
-        <div className="px-4 lg:px-12 py-8 border-b flex flex-col gap-4 w-full justify-center" style={{backgroundColor: "F5F5F5"}}>
+    if (isInformationalPage) {
+        return null;
+    }
+
+    return (
+        <div className="px-4 lg:px-12 py-8 border-b flex flex-col gap-4 w-full justify-center" style={{backgroundColor: "#F5F5F5"}}>
             <SearchInput disabled />
             <div className="hidden lg:block ">
-            <div className="h-11" />
+                <div className="h-11" />
             </div>
-              </div>
+        </div>
     );
 }

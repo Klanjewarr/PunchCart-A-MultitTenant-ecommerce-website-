@@ -18,18 +18,21 @@ export const useCartStore = create<CartState>()(
         (set) => ({
             tenantCarts: {},
             addProduct: (tenantSlug, productId) =>
-                set((state) => ({
-                    tenantCarts: {
-                        ...state.tenantCarts,
-                        [tenantSlug]: {
-                            productIds: [
-                                ...(state.tenantCarts[tenantSlug]?.productIds || []),
-                                productId,
-
-                            ]
-                        }
+                set((state) => {
+                    const existingIds = state.tenantCarts[tenantSlug]?.productIds || [];
+                    // Prevent duplicate products in cart
+                    if (existingIds.includes(productId)) {
+                        return state;
                     }
-                })),
+                    return {
+                        tenantCarts: {
+                            ...state.tenantCarts,
+                            [tenantSlug]: {
+                                productIds: [...existingIds, productId]
+                            }
+                        }
+                    };
+                }),
             removeProduct: (tenantSlug, productId) =>
                 set((state) => ({
                     tenantCarts: {

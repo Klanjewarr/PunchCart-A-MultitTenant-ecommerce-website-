@@ -5,9 +5,18 @@ import type { CollectionConfig } from 'payload';
 export const Reviews: CollectionConfig = {
     slug: "reviews",
         access: {
-            read: ({ req }) => isSuperAdmin(req.user),
-            create: ({ req }) => isSuperAdmin(req.user),
-            update: ({ req }) => isSuperAdmin(req.user),
+            read: () => true,
+            create: ({ req }) => Boolean(req.user),
+            update: ({ req }) => {
+                if (isSuperAdmin(req.user)) return true;
+                if (!req.user) return false;
+                // Users can only update their own reviews
+                return {
+                    user: {
+                        equals: req.user.id,
+                    },
+                };
+            },
             delete: ({ req }) => isSuperAdmin(req.user),
         },
     admin: {

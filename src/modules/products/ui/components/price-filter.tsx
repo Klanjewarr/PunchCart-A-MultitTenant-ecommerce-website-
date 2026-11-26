@@ -48,9 +48,9 @@ export const PriceFilter = ({
     }
 
     return(
-        <div className="flex flex-col gap-2">
-            <div className="flex flex-col gap-2">
-                <Label className="font-medium text-base">
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1.5">
+                <Label className="font-bold text-xs uppercase tracking-wider text-black">
                     Minimum Price
                 </Label>
                 <Input
@@ -58,11 +58,12 @@ export const PriceFilter = ({
                 placeholder="$0"
                 value={minPrice ? formatAsCurrency(minPrice): ""}
                 onChange={handleMinPriceChange}
+                className="border-2 border-black rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:shadow-[3px_3px_0px_rgba(0,0,0,1)] focus:bg-pink-100/10 font-medium px-3 h-10 bg-white text-black text-sm"
                 />
             </div>
 
-            <div className="flex flex-col gap-2">
-                <Label className="font-medium text-base">
+            <div className="flex flex-col gap-1.5">
+                <Label className="font-bold text-xs uppercase tracking-wider text-black">
                     Maximum Price
                 </Label>
                 <Input
@@ -70,6 +71,7 @@ export const PriceFilter = ({
                 placeholder="∞"
                 value={maxPrice ? formatAsCurrency(maxPrice): ""}
                 onChange={handleMaxPriceChange}
+                className="border-2 border-black rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:shadow-[3px_3px_0px_rgba(0,0,0,1)] focus:bg-pink-100/10 font-medium px-3 h-10 bg-white text-black text-sm"
                 />
             </div>
         </div>

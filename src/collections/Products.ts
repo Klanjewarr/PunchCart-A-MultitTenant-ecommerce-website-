@@ -6,15 +6,24 @@ import { Tenant } from "@/payload-types";
 export const Products: CollectionConfig = {
     slug:"products",
     access:{
-
-          create:({req})=>{ 
+        read: () => true,
+        create:({req})=>{ 
             if(isSuperAdmin(req.user)) return true;
 
             const tenant= req.user?.tenants?.[0]?.tenant as Tenant;
             
             return Boolean(tenant?.stripeDetailsSubmitted);
             },
-            delete: ({req}) => isSuperAdmin(req.user),     
+        update: ({req}) => {
+            if(isSuperAdmin(req.user)) return true;
+            // Allow tenant members to update their own products
+            return {
+                "tenant.slug": {
+                    equals: (req.user?.tenants?.[0]?.tenant as Tenant)?.slug,
+                },
+            };
+        },
+        delete: ({req}) => isSuperAdmin(req.user),     
     },
     admin:{
         useAsTitle:"name",
@@ -63,7 +72,7 @@ export const Products: CollectionConfig = {
     {
         name:"refundPolicy",
         type:"select",
-        options:["30-day","14-day","7-day","3-day","1-Day", "no-refunds"],
+        options:["30-day","14-day","7-day","3-day","1-day", "no-refunds"],
         defaultValue:"30-day",
     },
     {

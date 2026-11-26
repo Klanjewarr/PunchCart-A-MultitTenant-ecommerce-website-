@@ -16,7 +16,7 @@ import { Category } from './collections/Categories'
 import { Products } from "./collections/Products"
 import { Tags } from './collections/Tags'
 import { Tenants } from './collections/Tenants'
-import { Orders } from './collections/Ordes'
+import { Orders } from './collections/Orders'
 import { Reviews } from './collections/Reviews'
 import { isSuperAdmin } from './lib/access'
 
@@ -41,6 +41,16 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
+    connectOptions: {
+      maxPoolSize: 10,
+      minPoolSize: 0,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
+      family: 4, // CRITICAL: Force IPv4 to eliminate 30-60s IPv6 DNS resolution stalls on MongoDB Atlas
+      autoIndex: process.env.NODE_ENV !== 'production', // Prevent cold-start index rebuilding in production
+      dbName: 'punchcart',
+    },
   }),
   sharp,
   plugins: [
