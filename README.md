@@ -1,6 +1,6 @@
 # PunchCart - Multi-Tenant E-Commerce Platform
    
-   🚀 LIVE: [http://punchcart.store/]
+   🚀 LIVE: [https://punchcart.shop/](https://punchcart.shop/)
    
    ## What it does
    Enterprise-grade marketplace where vendors can create their own storefronts with custom subdomains.

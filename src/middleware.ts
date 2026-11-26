@@ -16,16 +16,18 @@ export const config = {
 export default async function middleware(req: NextRequest) {
     const url = req.nextUrl;
     // Extract the hostname (e.g., "devstarter.punchcart.shop" or "www.punchcart.shop")
-    const hostname = (req.headers.get("host") || "").split(":")[0];
+    const hostHeader = req.headers.get("host") || "";
+    const hostname = hostHeader.split(":")[0] || "";
 
-    const rootDomain = (process.env.NEXT_PUBLIC_ROOT_DOMAIN || "").trim().replace(/^["']|["']$/g, "").split(":")[0];
+    const rawDomain = (process.env.NEXT_PUBLIC_ROOT_DOMAIN || "").trim().replace(/^["']|["']$/g, "");
+    const rootDomain = rawDomain.split(":")[0] || "";
     const enableSubdomain = process.env.NEXT_PUBLIC_ENABLE_SUBDOMAIN_ROUTING === "true";
 
     if (url.pathname.startsWith("/_next")) {
         return NextResponse.next();
     }
 
-    if (enableSubdomain && rootDomain && hostname.endsWith(`.${rootDomain}`)) {
+    if (enableSubdomain && rootDomain && hostname && hostname.endsWith(`.${rootDomain}`)) {
         // Extract the tenant slug from the subdomain (e.g. "devstarter" from "devstarter.punchcart.shop")
         const tenantSlug = hostname.replace(`.${rootDomain}`, "").toLowerCase();
 
