@@ -29,7 +29,10 @@ declare global {
 
 const getCachedPayload = async (): Promise<Payload> => {
   if (!globalThis._cachedPayloadPromise) {
-    globalThis._cachedPayloadPromise = getPayload({ config });
+    globalThis._cachedPayloadPromise = getPayload({ config }).catch((err) => {
+      globalThis._cachedPayloadPromise = undefined;
+      throw err;
+    });
   }
   return globalThis._cachedPayloadPromise;
 };

@@ -20,8 +20,8 @@ export const CartButton = ({ tenantSlug, productId, isPurchased }: Props) => {
                 asChild
                 className="flex-1 font-medium bg-white"
             >
-                <Link href={`${process.env.NEXT_PUBLIC_APP_URL}/library/${productId}`}>
-                    View in Libray
+                <Link href={`/library/${productId}`}>
+                    View in Library
                 </Link>
             </Button>
         )

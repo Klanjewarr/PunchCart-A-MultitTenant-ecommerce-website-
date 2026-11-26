@@ -35,7 +35,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Category, Products, Tags, Tenants, Orders, Reviews],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: process.env.PAYLOAD_SECRET || 'punchcart_production_secret_fallback_key_32chars_long!',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
@@ -66,7 +66,7 @@ export default buildConfig({
       userHasAccessToAllTenants: (user) => isSuperAdmin(user),
     }),
     vercelBlobStorage({
-      enabled: true,
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       collections:{
         media: true,
       },
