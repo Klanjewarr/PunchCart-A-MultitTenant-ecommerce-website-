@@ -8,6 +8,7 @@ import { DEFAULT_LIMIT } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { InboxIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface Props {
     category?: string;
@@ -37,9 +38,25 @@ export const ProductList = ({ category, tenantSlug, narrowView }: Props) => {
 
     if (data.pages?.[0]?.docs.length === 0) {
         return (
-            <div className="border  border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-lg">
-                <InboxIcon />
-                <p className="text-base font-medium">No products found</p>
+            <div className="border-2 border-black rounded-none p-12 flex items-center justify-center flex-col gap-y-4 bg-white w-full shadow-[6px_6px_0px_rgba(0,0,0,1)] text-center">
+                <div className="size-16 rounded-full border-2 border-black bg-[#FFE066] flex items-center justify-center shadow-[3px_3px_0px_rgba(0,0,0,1)] mb-2">
+                    <InboxIcon className="size-8 text-black" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-black">No Products Found</h3>
+                <p className="text-sm font-medium text-neutral-600 max-w-md">
+                    We couldn&apos;t find any items matching your criteria. Try adjusting your filters or be the first creator to list a product in this section!
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+                    <Button
+                        asChild
+                        variant="elevated"
+                        className="bg-pink-400 text-black border-2 border-black rounded-none font-bold text-xs uppercase tracking-wider shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:bg-pink-500 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
+                    >
+                        <Link href="/sign-up">
+                            Sell Your Product Here
+                        </Link>
+                    </Button>
+                </div>
             </div>
         )
     }

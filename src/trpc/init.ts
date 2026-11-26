@@ -1,6 +1,6 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { cache } from 'react';
-import { getPayload } from 'payload';
+import { getPayload, type Payload } from 'payload';
 import config from '@payload-config';
 import  superjson  from 'superjson';
 import {headers as getHeaders} from 'next/headers';
@@ -10,7 +10,7 @@ export const createTRPCContext = cache(async () => {
   /**
    * @see: https://trpc.io/docs/server/context
    */
-  return { userId: 'user_123' };
+  return {};
 });
 // Avoid exporting the entire t-object
 // since it's not very descriptive.
@@ -22,11 +22,23 @@ const t = initTRPC.create({
    */
   transformer: superjson,
 });
+// Memoized payload instance to avoid repeated cold-start initialization
+declare global {
+  var _cachedPayloadPromise: Promise<Payload> | undefined;
+}
+
+const getCachedPayload = async (): Promise<Payload> => {
+  if (!globalThis._cachedPayloadPromise) {
+    globalThis._cachedPayloadPromise = getPayload({ config });
+  }
+  return globalThis._cachedPayloadPromise;
+};
+
 // Base router and procedure helpers
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
 export const baseProcedure = t.procedure.use(async({ next })=>{
-  const payload =await getPayload({config});
+  const payload = await getCachedPayload();
 
   return next({ ctx : { db:payload } });
 } )

@@ -113,7 +113,7 @@ export const checkoutRouter = createTRPCRouter({
       if(!tenant.stripeDetailsSubmitted){
         throw new TRPCError({
           code:"BAD_REQUEST",
-          message:"Tenant are not allowed to sell products.",
+          message:"This tenant is not allowed to sell products.",
         })
       }
 
@@ -144,7 +144,7 @@ export const checkoutRouter = createTRPCRouter({
         totalAmount * (PLATFORM_FEE_PERCENTAGE/100)
       );
 
-      const domain= generateTenantURL(input.tenantSlug);
+      const domain = generateTenantURL(input.tenantSlug, true);
 
         const checkout = await stripe.checkout.sessions.create({
           customer_email: ctx.session.user.email,

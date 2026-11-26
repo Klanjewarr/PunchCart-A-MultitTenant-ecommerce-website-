@@ -1,3 +1,5 @@
+// use this for category and subcategory generation bun run seed.ts
+
 import {getPayload} from "payload";
 import  config  from "@payload-config";
 import { stripe } from "./lib/stripe";

@@ -4,7 +4,15 @@ import type { CollectionConfig } from 'payload'
 export const Tenants: CollectionConfig = {
   slug: 'tenants',
   access: {
+    read: () => true,
     create: ({ req }) => isSuperAdmin(req.user),
+    update: ({ req, id }) => {
+      if (isSuperAdmin(req.user)) return true;
+      // Allow tenant members to update their own tenant profile (name, image)
+      const userTenantId = req.user?.tenants?.[0]?.tenant;
+      const tenantId = typeof userTenantId === 'object' ? userTenantId?.id : userTenantId;
+      return tenantId === id;
+    },
     delete: ({ req }) => isSuperAdmin(req.user),
   },
   admin: {

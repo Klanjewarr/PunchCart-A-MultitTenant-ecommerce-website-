@@ -21,7 +21,7 @@ export const reviewsRouter = createTRPCRouter({
       if (!product){
         throw new TRPCError({
             code: "NOT_FOUND",
-            message: "Producr not found",
+            message: "Product not found",
         })
       }
 
@@ -68,7 +68,7 @@ export const reviewsRouter = createTRPCRouter({
          if (!product){
         throw new TRPCError({
             code: "NOT_FOUND",
-            message: "Producr not found",
+            message: "Product not found",
         });
      }
 
@@ -89,7 +89,7 @@ export const reviewsRouter = createTRPCRouter({
      if(existingReviewsData.totalDocs>0){
         throw new TRPCError({
             code:"BAD_REQUEST",
-            message: "You have already reviewd tis product",
+            message: "You have already reviewed this product",
         })
      }
      const review = await ctx.db.create({

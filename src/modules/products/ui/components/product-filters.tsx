@@ -20,15 +20,15 @@ const ProductFilter =({title, className, children}:ProductFiltersProps) =>{
     const Icon = isOpen ? ChevronDownIcon:ChevronRightIcon;
 
     return(
-        <div className={cn("p-4 border-b flex flex-col gap-2",className)}>
+        <div className={cn("p-4 border-b-2 border-black flex flex-col gap-3 bg-white", className)}>
             <div
             onClick={()=> setIsOpen((current)=>!current)}
-            className="flex items-center justify-between cursor-pointer"
+            className="flex items-center justify-between cursor-pointer group"
             >
-                <p className="font-medium">{title}</p>
-                <Icon className="size-5"/>
+                <p className="font-black uppercase text-xs tracking-wider text-black group-hover:text-pink-600 transition-colors">{title}</p>
+                <Icon className="size-4 text-black shrink-0" />
             </div>
-            {isOpen && children}
+            {isOpen && <div className="pt-2 animate-fade-in">{children}</div>}
         </div>
     );
 };
@@ -63,12 +63,12 @@ export const ProductFilters = () =>{
     }
 
     return(
-        <div className="border rounded-md bg-white">
-            <div className="p-4 border-b flex items-center justify-between ">
-                <p className="font-medium">Filters</p>
+        <div className="border-2 border-black rounded-sm bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden">
+            <div className="p-4 border-b-2 border-black flex items-center justify-between bg-[#FFE066]">
+                <p className="font-black uppercase text-sm tracking-wider text-black">Filters</p>
                 {hasAnyFilters &&(
-                    <button className="underline cursor-pointer" onClick={()=>onClear()} type="button">
-                    Clear
+                    <button className="underline font-bold text-xs uppercase cursor-pointer text-black hover:text-pink-600 transition-colors" onClick={()=>onClear()} type="button">
+                    Clear All
                 </button>
                 )}
             </div>

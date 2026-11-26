@@ -47,7 +47,6 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
 
     useEffect(()=>{
         if(states.success){
-            console.log("triggered")
             setStates({ success: false, cancel: false})
             clearCart();
             queryClient.invalidateQueries(trpc.library.getMany.infiniteQueryFilter())
@@ -72,9 +71,10 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
     if(isLoading){
         return(
             <div className="lg:pt-16 pt-4 lg:px-12">
-            <div className="border  border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-lg">
-                <LoaderIcon className="text-muted-foreground animate-spin" />
-            </div>
+                <div className="border-2 border-black border-dashed flex items-center justify-center p-16 flex-col gap-y-4 bg-[#F4F4F0] w-full rounded-none shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+                    <LoaderIcon className="w-10 h-10 text-black animate-spin" />
+                    <p className="text-sm font-black uppercase tracking-widest text-black">Verifying Cart Items...</p>
+                </div>
             </div>
         )
     }
@@ -82,20 +82,23 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
     if (data?.totalDocs === 0){
           return (
              <div className="lg:pt-16 pt-4 lg:px-12">
-            <div className="border  border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-lg">
-                <InboxIcon />
-                <p className="text-base font-medium">No products found</p>
-            </div>
+                <div className="border-2 border-black border-dashed flex items-center justify-center p-16 flex-col gap-y-4 bg-[#F4F4F0] w-full rounded-none shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+                    <div className="p-4 bg-white border-2 border-black shadow-[3px_3px_0px_rgba(0,0,0,1)]">
+                        <InboxIcon className="w-8 h-8 text-black" />
+                    </div>
+                    <h3 className="text-xl font-black uppercase tracking-wider text-black mt-2">Your Cart is Empty</h3>
+                    <p className="text-sm font-medium text-neutral-600">Looks like you haven&apos;t added any products to your cart yet.</p>
+                </div>
             </div>
         )
     }
 
     return (
         <div className="lg:pt-16 pt-4 lg:px-12">
-           <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 lg:gap-16">
+           <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-16">
 
             <div className="lg:col-span-4">
-                <div className="border rounded-md overflow-hidden bg-white">
+                <div className="border-2 border-black rounded-none overflow-hidden bg-white shadow-[6px_6px_0px_rgba(0,0,0,1)]">
                  {data?.docs.map((product, index)=>(   
                     <CheckoutItem
                     key = {product.id}

@@ -146,7 +146,7 @@ export const productsRouter = createTRPCRouter({
       }
 
       if (input.sort === "trending") {
-        sort = "-createdAt"
+        sort = "-updatedAt"
       }
 
 
@@ -240,28 +240,46 @@ export const productsRouter = createTRPCRouter({
         }
       });
 
-      const dataWithSummarizedReviews = await Promise.all(
-        data.docs.map(async(doc)=>{
-          const reviewsData= await ctx.db.find({
-            collection: "reviews",
-            pagination: false,
-            where:{
-              product: {
-                equals: doc.id,
-              },
-            },
-          });
+      const productIds = data.docs.map((doc) => doc.id);
+      const reviewsMap: Record<string, { totalRating: number; count: number }> = {};
 
-          return{
-            ...doc,
-            reviewCount: reviewsData.totalDocs,
-            reviewRating:
-              reviewsData.docs.length ===0
-                ?0
-                :reviewsData.docs.reduce((acc, review)=>acc+review.rating,0)/reviewsData.totalDocs
+      if (productIds.length > 0) {
+        const allReviews = await ctx.db.find({
+          collection: "reviews",
+          pagination: false,
+          where: {
+            product: {
+              in: productIds,
+            },
+          },
+        });
+
+        allReviews.docs.forEach((review) => {
+          const prodId = typeof review.product === "object" && review.product !== null
+            ? (review.product as { id: string }).id
+            : (review.product as string);
+          if (prodId) {
+            if (!reviewsMap[prodId]) {
+              reviewsMap[prodId] = { totalRating: 0, count: 0 };
+            }
+            reviewsMap[prodId].totalRating += (review.rating || 0);
+            reviewsMap[prodId].count += 1;
           }
-        }),
-      );
+        });
+      }
+
+      const dataWithSummarizedReviews = data.docs.map((doc) => {
+        const stats = reviewsMap[doc.id];
+        const reviewRating = stats && stats.count > 0
+          ? Math.round((stats.totalRating / stats.count) * 10) / 10
+          : 0;
+        const reviewCount = stats ? stats.count : 0;
+        return {
+          ...doc,
+          reviewRating,
+          reviewCount,
+        };
+      });
 
       return {
         ...data,

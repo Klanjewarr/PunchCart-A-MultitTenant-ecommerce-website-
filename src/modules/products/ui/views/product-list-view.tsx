@@ -11,9 +11,14 @@ interface Props{
 
 export const ProductListView = ({category, tenantSlug, narrowView}:Props) => {
     return(
-    <div className="px-4 lg:px-12 py-8 flex flex-col gap-4">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-y-0 justify-between">
-            <p className="text-2xl font-medium">Curated for you</p>
+    <div id="marketplace" className="px-4 lg:px-12 py-8 flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-y-3 justify-between pb-3 border-b-2 border-black/10">
+            <div className="flex items-center gap-2.5">
+                <span className="size-3.5 bg-pink-400 border border-black shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] rotate-45" />
+                <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-black">
+                    {category ? `${category.replace(/-/g, " ")} Products` : "Curated Digital Goods"}
+                </h2>
+            </div>
             <ProductSort />
         </div>
 
